@@ -1,0 +1,6 @@
+humanfriendly==8.2
+ipython==7.18.1
+jupyterlab==2.2.8
+pandas==1.1.2
+requests==2.24.0
+webvtt-py==0.4.5
