@@ -53,4 +53,4 @@ class Caption(models.Model):
         return "{:02d}:{:02d}:{:06.3f}".format(hours, minutes, seconds)
 
     def __str__(self):
-        return f"{self.start_ts}-{self.end_ts} {self.text[:30]}..."
+        return f"[{self.start_ts}-{self.end_ts}] {self.text[:30]}..."
