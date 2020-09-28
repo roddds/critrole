@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -26,3 +27,7 @@ class Caption(models.Model):
     duration = models.DurationField(verbose_name="Line length in time")
     start = models.DurationField(verbose_name="Line start timestamp")
     end = models.DurationField(verbose_name="Line end timestamp")
+
+    text = models.TextField(verbose_name="Caption text")
+    lines = ArrayField(models.TextField(name="line"))
+
