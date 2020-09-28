@@ -9,3 +9,4 @@ webvtt-py==0.4.5
 Django==3.1.1
 django-extensions==3.0.9
 Werkzeug==1.0.1
+psycopg2==2.8.6
