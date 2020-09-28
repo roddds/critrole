@@ -1,6 +1,21 @@
 # Critical Role Data
 
-## Database setup
+## Setup instructions
+
+### Download all Campaign 2 subtitles
+
+(takes about an hour)
+
+```bash
+youtube-dl https://www.youtube.com/playlist\?list\=PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2 \
+    --skip-download \
+    --write-sub \
+    --sub-lang en
+```
+
+and then move them to the `subtitles/` directory
+
+### Database setup
 
 ```sql
 CREATE DATABASE critrole;
