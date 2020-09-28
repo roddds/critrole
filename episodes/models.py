@@ -1,7 +1,11 @@
+from urllib.parse import urlencode
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
+
+YOUTUBE_VIDEO_URL_PREFIX = "https://www.youtube.com/watch?"
+YOUTUBE_EMBED_URL_PREFIX = "https://www.youtube.com/embed/"
 
 
 class Episode(models.Model):
@@ -12,6 +16,14 @@ class Episode(models.Model):
     # running_time = models.DurationField(verbose_name="Episode running time")
     subtitle_filename = models.TextField(verbose_name="Episode subtitle file name")
     raw_captions = models.TextField(verbose_name="Raw caption contents")
+
+    @property
+    def watch_url(self):
+        return YOUTUBE_VIDEO_URL_PREFIX + urlencode({"v": self.video_id})
+
+    @property
+    def embed_url(self):
+        return YOUTUBE_EMBED_URL_PREFIX + self.video_id + "?"
 
     def __str__(self):
         return f"{self.chapter} - {self.title}"
@@ -37,6 +49,18 @@ class Caption(models.Model):
 
     text = models.TextField(verbose_name="Caption text")
     lines = ArrayField(models.TextField(name="line"))
+
+    @property
+    def url(self):
+        return self.episode.embed_url + urlencode(
+            {
+                # Give it a small buffer so the playback
+                # doesn't start or end too early
+                "start": self.start.seconds - 1,
+                "end": self.end.seconds + 2,
+                "autoplay": "1",
+            }
+        )
 
     @property
     def start_ts(self):
