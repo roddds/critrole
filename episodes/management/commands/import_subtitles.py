@@ -88,13 +88,14 @@ class Command(BaseCommand):
                     speaker_name = speaker["speaker"]
                     first_caption_in_speech = caption
 
+                caption.speaker = speaker_name
                 joined_captions.append(caption)
 
             Caption.objects.bulk_create(
                 [
                     Caption(
                         episode=new_episode,
-                        speaker=self.get_cast_member(speaker_name),
+                        speaker=self.get_cast_member(caption.speaker),
                         text=caption.text,
                         lines=caption._lines,
                         duration=datetime.timedelta(
