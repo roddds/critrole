@@ -61,7 +61,7 @@ class Command(BaseCommand):
             with open(subtitle_abspath) as f:
                 new_episode = Episode.objects.create(
                     chapter=episode["chapter"],
-                    title=episode["title"],
+                    title=episode["title"].strip(),
                     subtitle_filename=episode["filename"],
                     raw_captions=f.read(),
                 )
