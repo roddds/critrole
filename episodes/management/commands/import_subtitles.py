@@ -69,6 +69,7 @@ class Command(BaseCommand):
             episode_captions = subtitle_parser.read(subtitle_abspath).captions
 
             last_caption = None
+            caption_instances = []
 
             for caption in episode_captions:
                 speaker = re.match(SPEAKER_PATTERN, caption.text)
@@ -85,10 +86,16 @@ class Command(BaseCommand):
                     speaker_name = speaker["speaker"]
                     last_caption = caption
 
-                Caption.objects.create(
-                    episode=new_episode,
-                    speaker=self.get_cast_member(speaker_name),
-                    duration=datetime.timedelta(seconds=caption._start - caption._end),
-                    start=datetime.timedelta(seconds=caption._start),
-                    end=datetime.timedelta(seconds=caption._end),
+                caption_instances.append(
+                    Caption(
+                        episode=new_episode,
+                        speaker=self.get_cast_member(speaker_name),
+                        duration=datetime.timedelta(
+                            seconds=caption._start - caption._end
+                        ),
+                        start=datetime.timedelta(seconds=caption._start),
+                        end=datetime.timedelta(seconds=caption._end),
+                    )
                 )
+
+            Caption.objects.bulk_create(caption_instances)
