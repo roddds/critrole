@@ -8,7 +8,7 @@ from episodes.models import Episode, Caption, CastMember
 import webvtt
 
 
-TITLE_PATTERN = r"(?P<filename>^(?P<title>.+) _ Critical Role ?_ Campaign 2,? Episode (?P<chapter>\d+).*$)"
+TITLE_PATTERN = r"(?P<filename>^(?P<title>.+) _ Critical Role ?_ Campaign 2,? Episode (?P<chapter>\d+).*?-(?P<video_id>[\w-]+)\.en\.vtt$)"
 SPEAKER_PATTERN = r"(?P<speaker>^[A-Z]+):"
 EMOTION_PATTERN = r"^[\(\[](?P<emotion>.+)[\)\]]$"
 
@@ -61,6 +61,7 @@ class Command(BaseCommand):
             with open(subtitle_abspath) as f:
                 new_episode = Episode.objects.create(
                     chapter=episode["chapter"],
+                    video_id=episode["video_id"],
                     title=episode["title"].strip(),
                     subtitle_filename=episode["filename"],
                     raw_captions=f.read(),

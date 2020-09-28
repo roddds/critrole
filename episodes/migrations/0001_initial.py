@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
                 ('title', models.TextField(verbose_name='Episode title')),
                 ('subtitle_filename', models.TextField(verbose_name='Episode subtitle file name')),
                 ('raw_captions', models.TextField(verbose_name='Raw caption contents')),
+                ('video_id', models.TextField(verbose_name='Youtube identifier')),
             ],
         ),
         migrations.CreateModel(
