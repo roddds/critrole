@@ -68,34 +68,41 @@ class Command(BaseCommand):
 
             episode_captions = subtitle_parser.read(subtitle_abspath).captions
 
-            last_caption = None
-            caption_instances = []
+            first_caption_in_speech = None
+            joined_captions = []
 
             for caption in episode_captions:
                 speaker = re.match(SPEAKER_PATTERN, caption.text)
 
                 if speaker is None:
+                    # This line is a continuation of a previous line,
+                    # or a multiple-cast emotion, like "(laughs)"
                     is_emotion = bool(re.match(EMOTION_PATTERN, caption.text))
                     if is_emotion:
-                        speaker_name = "All"
+                        speaker_name = "ALL"
                     else:
-                        last_caption._lines += caption.lines
-                        last_caption._end = caption._end
+                        first_caption_in_speech._lines += caption.lines
+                        first_caption_in_speech._end = caption._end
                     continue
                 else:
                     speaker_name = speaker["speaker"]
-                    last_caption = caption
+                    first_caption_in_speech = caption
 
-                caption_instances.append(
+                joined_captions.append(caption)
+
+            Caption.objects.bulk_create(
+                [
                     Caption(
                         episode=new_episode,
                         speaker=self.get_cast_member(speaker_name),
+                        text=caption.text,
+                        lines=caption._lines,
                         duration=datetime.timedelta(
                             seconds=caption._start - caption._end
                         ),
                         start=datetime.timedelta(seconds=caption._start),
                         end=datetime.timedelta(seconds=caption._end),
                     )
-                )
-
-            Caption.objects.bulk_create(caption_instances)
+                    for caption in joined_captions
+                ]
+            )
