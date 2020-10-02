@@ -33,5 +33,6 @@ $ cd subtitles/
 $ youtube-dl https://www.youtube.com/playlist\?list\=PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2 \
     --skip-download \
     --write-sub \
-    --sub-lang en
+    --sub-lang en \
+    --no-overwrites
 ```
