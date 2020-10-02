@@ -12,7 +12,7 @@ TITLE_PATTERN = r"(?P<filename>^(?P<title>.+) _ Critical Role ?_ Campaign 2,? Ep
 EMOTION_PATTERN = r"^[\(\[](?P<emotion>.+)[\)\]]$"
 MUSIC_PATTERN = r"^(?P<music>♪ .* ♪)"
 
-SPEAKERS_PATTERN = r"(?P<cast>([A-Z]+)((?:, *[A-Z]+)*),? *(and )*([A-Z]+)*):"
+SPEAKERS_PATTERN = r"(?P<cast>([A-Z\(\)\. ]+)((?:, *[A-Z]+)*),? *(and )*([A-Z]+)*):"
 
 
 def parse_episode_subtitles(path):
@@ -107,6 +107,7 @@ class Command(BaseCommand):
         return re.findall(
             r"[A-Z]+",
             attribution_string.replace(",", "")
+            .replace("(V.O.)", "")
             .replace(" and ", " ")
             .replace(" AND ", " "),
         )
