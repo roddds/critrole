@@ -51,6 +51,20 @@ class Caption(models.Model):
     lines = ArrayField(models.TextField(name="line"))
 
     @property
+    def previous(self):
+        return (
+            self.episode.captions.filter(start__lt=self.start)
+            .order_by("-start")
+            .first()
+        )
+
+    @property
+    def next(self):
+        return (
+            self.episode.captions.filter(start__gt=self.start).order_by("start").first()
+        )
+
+    @property
     def url(self):
         return self.episode.embed_url + urlencode(
             {
