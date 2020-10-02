@@ -40,9 +40,7 @@ class Caption(models.Model):
     episode = models.ForeignKey(
         "episodes.Episode", related_name="captions", on_delete=models.CASCADE
     )
-    speaker = models.ForeignKey(
-        "episodes.CastMember", related_name="lines", on_delete=models.CASCADE
-    )
+    speakers = models.ManyToManyField("episodes.CastMember", related_name="lines")
     duration = models.DurationField(verbose_name="Line length in time")
     start = models.DurationField(verbose_name="Line start timestamp")
     end = models.DurationField(verbose_name="Line end timestamp")
