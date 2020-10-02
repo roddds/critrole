@@ -2,19 +2,6 @@
 
 ## Setup instructions
 
-### Download all Campaign 2 subtitles
-
-(takes about an hour)
-
-```bash
-youtube-dl https://www.youtube.com/playlist\?list\=PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2 \
-    --skip-download \
-    --write-sub \
-    --sub-lang en
-```
-
-and then move them to the `subtitles/` directory
-
 ### Database setup
 
 ```sql
@@ -34,6 +21,17 @@ ALTER USER 'critrole' CREATEDB;
 ### Create database and import subtitles
 
 ```bash
+$ pip install -r requirements.txt
 $ ./manage.py migrate
 $ ./manage.py import_subtitles --path ./subtitles
+```
 
+### Updating subtitles from new episodes
+
+```bash
+$ cd subtitles/
+$ youtube-dl https://www.youtube.com/playlist\?list\=PL1tiwbzkOjQxD0jjAE7PsWoaCrs0EkBH2 \
+    --skip-download \
+    --write-sub \
+    --sub-lang en
+```
