@@ -25,3 +25,15 @@ GRANT ALL PRIVILEGES ON DATABASE 'critrole' TO 'critrole'
 ALTER database 'critrole' OWNER TO 'critrole'
 ALTER USER 'critrole' CREATEDB;
 ```
+
+<img
+  src="https://github.com/roddds/critrole/blob/app/static/models.png?raw=true"
+  alt="Models relationship diagram"
+>
+
+### Create database and import subtitles
+
+```bash
+$ ./manage.py migrate
+$ ./manage.py import_subtitles --path ./subtitles
+
