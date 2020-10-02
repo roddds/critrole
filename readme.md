@@ -29,7 +29,7 @@ ALTER USER 'critrole' CREATEDB;
 <img
   src="https://github.com/roddds/critrole/blob/app/static/models.png?raw=true"
   alt="Models relationship diagram"
->
+/>
 
 ### Create database and import subtitles
 
