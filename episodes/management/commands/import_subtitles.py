@@ -187,7 +187,7 @@ class Command(BaseCommand):
                 [
                     Caption(
                         episode=new_episode,
-                        text=caption.text,
+                        text=" ".join(caption._lines),
                         lines=caption._lines,
                         duration=datetime.timedelta(
                             seconds=caption._start - caption._end
