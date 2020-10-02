@@ -1,12 +1,11 @@
+import datetime
 import os
 import re
-import datetime
 
-from django.core.management.base import BaseCommand
-
-from episodes.models import Episode, Caption, CastMember
+import humanfriendly
 import webvtt
-
+from django.core.management.base import BaseCommand
+from episodes.models import Caption, CastMember, Episode
 
 TITLE_PATTERN = r"(?P<filename>^(?P<title>.+) _ Critical Role ?_ Campaign 2,? Episode (?P<chapter>\d+).*?-(?P<video_id>[\w-]+)\.en\.vtt$)"
 EMOTION_PATTERN = r"^[\(\[](?P<emotion>.+)[\)\]]$"
@@ -110,15 +109,44 @@ class Command(BaseCommand):
             .replace(" AND ", " "),
         )
 
+    times_per_episode = []
+    episode_count = 0
+    start_time = datetime.datetime.now()
+
+    def get_average_time(self):
+        seconds_taken = sum([x.total_seconds() for x in self.times_per_episode])
+
+        if len(self.times_per_episode) == 0:
+            return datetime.timedelta()
+
+        return datetime.timedelta(seconds=seconds_taken / len(self.times_per_episode))
+
+    def get_time_until_done(self):
+        # Average duration of episode parsing
+        avg_time = self.get_average_time()
+        # Predicted length of all parsing
+        predicted_duration = datetime.timedelta(
+            seconds=avg_time.total_seconds() * self.episode_count
+        )
+        predicted_ending = self.start_time + predicted_duration
+        time_until_end = datetime.datetime.now() - predicted_ending
+
+        return humanfriendly.format_timespan(abs(time_until_end), max_units=2)
+
     def handle(self, path, *args, **kwargs):
         absolute_path = os.path.abspath(path)
         parsed_subtitles = parse_episode_subtitles(absolute_path)
         subtitle_parser = webvtt.WebVTT()
 
+        self.episode_count = len(parsed_subtitles)
+
         for episode in parsed_subtitles:
+            start = datetime.datetime.now()
             subtitle_abspath = os.path.join(absolute_path, episode["filename"])
 
-            print(f'Creating Episode {episode["title"]}')
+            print(
+                f'[{self.get_time_until_done()}]\t Creating Episode {episode["chapter"]} - {episode["title"]}'
+            )
             with open(subtitle_abspath) as f:
                 new_episode = Episode.objects.create(
                     chapter=episode["chapter"],
@@ -152,7 +180,6 @@ class Command(BaseCommand):
                         speaker_names = self.get_speakers(speakers)
                         first_caption_in_speech = vtt
 
-                    # caption.speaker = speaker_names
                     vtt.speakers = speaker_names
                     joined_captions.append(vtt)
 
@@ -171,7 +198,22 @@ class Command(BaseCommand):
                     for caption in joined_captions
                 ]
             )
+
+            line_assignments = []
+
             for vtt, instance in zip(joined_captions, instances):
-                instance.speakers.set(
-                    self.get_cast_member(person).id for person in vtt.speakers
-                )
+                for person in vtt.speakers:
+                    line_assignments.append(
+                        Caption.speakers.through(
+                            caption_id=instance.id,
+                            castmember_id=self.get_cast_member(person).id,
+                        )
+                    )
+
+            Caption.speakers.through.objects.bulk_create(line_assignments)
+
+            end = datetime.datetime.now()
+
+            self.times_per_episode.append(end - start)
+
+        print(f"Total time: {datetime.datetime.now() - self.start_time}")
