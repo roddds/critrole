@@ -8,7 +8,9 @@ from django.core.management.base import BaseCommand
 from episodes.models import Caption, CastMember, Episode
 
 TITLE_PATTERN = r"(?P<filename>^(?P<title>.+) _ Critical Role ?_ Campaign 2,? Episode (?P<chapter>\d+).*?-(?P<video_id>[\w-]+)\.en\.vtt$)"
+
 EMOTION_PATTERN = r"^[\(\[](?P<emotion>.+)[\)\]]$"
+MUSIC_PATTERN = r"^(?P<music>♪ .* ♪)"
 
 SPEAKERS_PATTERN = r"(?P<cast>([A-Z]+)((?:, *[A-Z]+)*),? *(and )*([A-Z]+)*):"
 
@@ -169,9 +171,12 @@ class Command(BaseCommand):
                     if speakers is None:
                         # This line is a continuation of a previous line,
                         # or a multiple-cast emotion, like "(laughs)"
-                        is_emotion = bool(re.match(EMOTION_PATTERN, vtt.text))
-                        if is_emotion:
+                        if bool(re.match(EMOTION_PATTERN, vtt.text)):
                             speaker_names = ["ALL"]
+                        # This is a line in the song from the D&D Beyond
+                        # ad that starts in episode 107
+                        elif bool(re.match(MUSIC_PATTERN, vtt.text)):
+                            speaker_names = ["MUSIC"]
                         else:
                             first_caption_in_speech._lines += vtt.lines
                             first_caption_in_speech._end = vtt._end
