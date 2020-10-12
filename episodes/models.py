@@ -25,6 +25,10 @@ class Episode(models.Model):
     def embed_url(self):
         return YOUTUBE_EMBED_URL_PREFIX + self.video_id + "?"
 
+    @property
+    def full_text(self):
+        return " ".join(self.captions.values_list("text", flat=True))
+
     def __str__(self):
         return f"{self.chapter} - {self.title}"
 
