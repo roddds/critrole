@@ -12,7 +12,6 @@ class Episode(models.Model):
     video_id = models.TextField(verbose_name="Youtube identifier")
     chapter = models.IntegerField(verbose_name="Chapter number")
     title = models.TextField(verbose_name="Episode title")
-    # url = models.TextField(verbose_name="Episode URL")
     # running_time = models.DurationField(verbose_name="Episode running time")
     subtitle_filename = models.TextField(verbose_name="Episode subtitle file name")
     raw_captions = models.TextField(verbose_name="Raw caption contents")
