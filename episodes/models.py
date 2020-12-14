@@ -4,10 +4,19 @@ from urllib.parse import urlencode
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
-# Create your models here.
-
 YOUTUBE_VIDEO_URL_PREFIX = "https://www.youtube.com/watch?"
 YOUTUBE_EMBED_URL_PREFIX = "https://www.youtube.com/embed/"
+
+
+## Episode sections
+# Intro & announcements
+#   Starts counting from the beginning of the episode
+# First part
+#   Matt usually says "last we left off"
+# Break
+#   "We're gonna go ahead and take a break"
+# Second part
+#   Welcome back
 
 
 class Episode(models.Model):
