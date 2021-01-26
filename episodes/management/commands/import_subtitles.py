@@ -196,7 +196,7 @@ class Command(BaseCommand):
                         text=" ".join(caption._lines),
                         lines=caption._lines,
                         duration=datetime.timedelta(
-                            seconds=caption._start - caption._end
+                            seconds=caption._end - caption._start
                         ),
                         start=datetime.timedelta(seconds=caption._start),
                         end=datetime.timedelta(seconds=caption._end),
