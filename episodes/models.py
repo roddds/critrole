@@ -93,15 +93,18 @@ class Caption(models.Model):
 
     @property
     def start_ts(self):
-        return self._to_timestamp(self.start)
+        return self._to_timestamp(self.start.total_seconds())
 
     @property
     def end_ts(self):
-        return self._to_timestamp(self.end)
+        return self._to_timestamp(self.end.total_seconds())
+
+    @property
+    def duration_ts(self, padding=20):
+        return self._to_timestamp(abs((self.end.total_seconds() + padding) - (self.start.total_seconds() - padding)))
 
     @staticmethod
-    def _to_timestamp(duration):
-        total_seconds = duration.total_seconds()
+    def _to_timestamp(total_seconds):
         hours = int(total_seconds / 3600)
         minutes = int(total_seconds / 60 - hours * 60)
         seconds = total_seconds - hours * 3600 - minutes * 60
