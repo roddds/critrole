@@ -95,7 +95,8 @@ class Command(BaseCommand):
         print(f"Added to cast: {name}")
         return self.cast_member_cache[name]
 
-    def get_speakers(self, attribution_string):
+    @staticmethod
+    def get_speakers(attribution_string):
         """
         examples:
             "MATT"
@@ -104,13 +105,13 @@ class Command(BaseCommand):
             "LIAM, LAURA, MATT, and ASHLEY"
             "LIAM, LAURA, MATT and ASHLEY"
         """
-        return re.findall(
-            r"[A-Z ]+",
-            attribution_string.replace(",", "")
-            .replace("(V.O.)", "")
-            .replace(" and ", " ")
-            .replace(" AND ", " "),
-        )
+        # Normalize separators
+        attribution_string = re.sub(r',? (and|AND) ', ', ', attribution_string)
+
+        # Remove extraneous information
+        attribution_string = re.sub(r" \(V\.?O\.?\)", "", attribution_string)
+
+        return re.split(', +?', attribution_string)
 
     times_per_episode = []
     episode_count = 0
