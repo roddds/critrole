@@ -111,7 +111,13 @@ class Command(BaseCommand):
         # Remove extraneous information
         attribution_string = re.sub(r" \(V\.?O\.?\)", "", attribution_string)
 
-        return re.split(', +?', attribution_string)
+        return [
+            line for line in
+            re.split(', +?', attribution_string)
+            # Avoid issue from this line:
+            # https://www.youtube.com/embed/_jDCU8IRyfA?start=222&end=246
+            if len(line) > 2
+        ]
 
     times_per_episode = []
     episode_count = 0
