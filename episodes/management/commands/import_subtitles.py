@@ -124,7 +124,7 @@ class Command(BaseCommand):
 
         return datetime.timedelta(seconds=seconds_taken / len(self.times_per_episode))
 
-    def get_time_until_done(self):
+    def get_time_until_done(self) -> str:
         # Average duration of episode parsing
         avg_time = self.get_average_time()
         # Predicted length of all parsing
