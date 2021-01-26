@@ -1,10 +1,13 @@
 # Critical Role Data
 
+This is a backend for a Django app to make it easier to query for specific lines that occur in Critical Role - Campaign 2.
+
 ## Setup instructions
 
 ### Database setup
 
 ```sql
+$ psql
 CREATE DATABASE critrole;
 CREATE USER critrole WITH PASSWORD 'critrole';
 ALTER ROLE critrole SET CLIENT_ENCODING TO 'utf8';
@@ -36,3 +39,7 @@ $ youtube-dl https://www.youtube.com/playlist\?list\=PL1tiwbzkOjQxD0jjAE7PsWoaCr
     --sub-lang en \
     --no-overwrites
 ```
+
+## Legal Notice
+
+Critical Role is a trademark of Critical Role Productions, LLC. I do not own the contents of the `subtitles/` directory. All credits go to its rightful owner.
