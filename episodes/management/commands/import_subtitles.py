@@ -105,7 +105,7 @@ class Command(BaseCommand):
             "LIAM, LAURA, MATT and ASHLEY"
         """
         return re.findall(
-            r"[A-Z]+",
+            r"[A-Z ]+",
             attribution_string.replace(",", "")
             .replace("(V.O.)", "")
             .replace(" and ", " ")
