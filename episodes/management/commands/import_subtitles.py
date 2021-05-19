@@ -7,7 +7,7 @@ import webvtt
 from django.core.management.base import BaseCommand
 from episodes.models import Caption, CastMember, Episode
 
-TITLE_PATTERN = r"(?P<filename>^(?P<title>.+) _ Critical Role ?_ Campaign 2,? Episode (?P<chapter>\d+).*?-(?P<video_id>[\w-]+)\.en\.vtt$)"
+TITLE_PATTERN = r"^(?P<title>.+?)(?P<campaign> ?[-_] .*)Episode (?P<chapter>\d+).*?-(?P<video_id>[\w-]+)\.en\.vtt$"
 
 EMOTION_PATTERN = r"^[\(\[](?P<emotion>.+)[\)\]]$"
 MUSIC_PATTERN = r"^(?P<music>♪ .* ♪)"
@@ -106,14 +106,14 @@ class Command(BaseCommand):
             "LIAM, LAURA, MATT and ASHLEY"
         """
         # Normalize separators
-        attribution_string = re.sub(r',? (and|AND) ', ', ', attribution_string)
+        attribution_string = re.sub(r",? (and|AND) ", ", ", attribution_string)
 
         # Remove extraneous information
         attribution_string = re.sub(r" \(V\.?O\.?\)", "", attribution_string)
 
         return [
-            line for line in
-            re.split(', +?', attribution_string)
+            line
+            for line in re.split(", +?", attribution_string)
             # Avoid issue from this line:
             # https://www.youtube.com/embed/_jDCU8IRyfA?start=222&end=246
             if len(line) > 2
