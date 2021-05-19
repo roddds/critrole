@@ -6,6 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 
 YOUTUBE_VIDEO_URL_PREFIX = "https://www.youtube.com/watch?"
 YOUTUBE_EMBED_URL_PREFIX = "https://www.youtube.com/embed/"
+SECTIONS_FILE_PATH = "episodes/management/commands/sections.json"
 
 
 ## Episode sections
@@ -48,9 +49,6 @@ class CastMember(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-
-
-SECTIONS_FILE_PATH = "episodes/management/commands/sections.json"
 
 
 class Caption(models.Model):
