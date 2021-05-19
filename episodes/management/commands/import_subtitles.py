@@ -24,7 +24,13 @@ def parse_episode_subtitles(path):
     by episode number.
     """
     filenames = [sub for sub in os.listdir(path) if sub.lower().endswith(".vtt")]
-    parsed = [re.match(TITLE_PATTERN, fn).groupdict() for fn in filenames]
+    parsed = []
+
+    for fn in filenames:
+        episode_data = re.match(TITLE_PATTERN, fn)
+        if episode_data is not None:
+            parsed.append(dict(**episode_data.groupdict(), filename=fn))
+
     return sorted(parsed, key=lambda x: int(x["chapter"]))
 
 
